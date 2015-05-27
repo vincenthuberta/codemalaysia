@@ -44,7 +44,14 @@ class UserTest < ActiveSupport::TestCase
     duplicate_user = @user.dup 
     duplicate_user.email = @user.email.upcase
     @user.save
-    assert_not duplicate_user.valid?
+    assert_not duplicate_user.valid? #if it is not duplicate, then it is true. If it returns false, the test will fail.
+  end
+  
+  test "email addresses should be saved as lower-case" do
+    mixed_case_email = "Foo@example.com"
+    @user.email = mixed_case_email
+    @user.save
+    assert_equal mixed_case_email.downcase, @user.reload.email
   end
   
   test "password should have a minimum length" do
