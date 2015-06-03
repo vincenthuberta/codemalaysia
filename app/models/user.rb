@@ -1,5 +1,13 @@
 class User < ActiveRecord::Base
-  
+    
+    attr_accessor :remember_token
+    
+    #remembers a user in the database for use in persistent sessions.
+    def remember
+        self.remember_token = User.new_token #generate a token / random string
+        update_attribute(:remember_digest, User.digest(remember_token))
+    end
+    
     before_save {email.downcase!}
     validates(:name, presence: true, length: {maximum: 50})
   
@@ -10,4 +18,28 @@ class User < ActiveRecord::Base
     
     has_secure_password
     validates(:password, length: {minimum: 6})
+    
+    #returns the hash digest of the given string
+    def User.digest(string)
+        cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                    BCrypt::Engine.cost
+        BCrypt::Password.create(string, cost: cost)
+    end
+    
+    #returns a random token or 22 characters random string
+    def User.new_token
+        SecureRandom.urlsafe_base64
+    end
+    
+    #returns true if the given token matches the digest
+    def authenticated?(remember_token)
+        return false if remember_digest.nil?
+        BCrypt::Password.new(remember_digest).is_password?(remember_token)
+    end
+    
+    #forgets a user
+    def forget 
+        update_attribute(:remember_digest, nil) #by updating remember_digest with nil, there will be no user data.
+                                                #thus logged out.
+    end
 end
