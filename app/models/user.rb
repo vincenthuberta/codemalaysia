@@ -17,17 +17,18 @@ class User < ActiveRecord::Base
             uniqueness: {case_sensitive: false})
     
     has_secure_password
-    validates(:password, length: {minimum: 6})
+    validates(:password, length: {minimum: 6}, allow_blank: true) #allow the password to be blank
+    
     
     #returns the hash digest of the given string
-    def User.digest(string)
+    def self.digest(string)
         cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
                                                     BCrypt::Engine.cost
         BCrypt::Password.create(string, cost: cost)
     end
     
     #returns a random token or 22 characters random string
-    def User.new_token
+    def self.new_token
         SecureRandom.urlsafe_base64
     end
     
