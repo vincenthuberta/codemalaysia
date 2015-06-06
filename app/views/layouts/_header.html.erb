@@ -16,8 +16,7 @@
                                 <li><%= link_to "Settings", edit_user_path(current_user) %></li>
                                 <li class="divider"></li>
                                 <li>
-                                    <%= link_to "Log out", logout_path, method: "delete" %> #logout_path will destroy the session and automatically go to home page
-                                </li>
+                                    <%= link_to "Log out", logout_path, method: "delete" %>
                             </ul>
                         </li>
                     <% else %>
