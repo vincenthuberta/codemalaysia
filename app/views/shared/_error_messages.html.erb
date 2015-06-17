@@ -1,10 +1,13 @@
-<% if @user.errors.any? %>
+<% if object.errors.any? %>
+  <!-- f.object in form_for(@user) do |f| is @user -->
+  <!-- f.object in form_for(@micropost) do |f| is @micropost -->
+  <!-- So we will use variable object to represent both @user and @micropost -->
   <div id="error_explanation">
     <div class="alert alert-danger">
-      The form contains <%= pluralize(@user.errors.count, "error") %>.
+      The form contains <%= pluralize(object.errors.count, "error") %>.
     </div>
     <ul>
-      <% @user.errors.full_messages.each do |msg| %>
+      <% object.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
     </ul>

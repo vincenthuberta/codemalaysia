@@ -6,12 +6,14 @@ class UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
+    redirect_to root_url and return unless @user.activated? 
   end
   
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.where(activated: true).paginate(page: params[:page])
   end
-    
+  
   def new
     @user = User.new
   end
@@ -52,15 +54,6 @@ class UsersController < ApplicationController
   end
   
   #create before filters
-  #Confirms a logged-in user
-  def logged_in_user
-    unless logged_in?
-      store_location 
-      #store the location so that once logged in, can directly go to the link the user wants. Friednly forwarding.
-      flash[:danger] = "Please log in." #whenever not logged in, flash this.
-      redirect_to login_url
-    end
-  end
   
   #confirms a correct user
   def correct_user
