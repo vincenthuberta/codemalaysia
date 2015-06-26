@@ -66,4 +66,14 @@ class UsersControllerTest < ActionController::TestCase
                                             #verify that even if the admin status changes, still can't become admin.
     assert_not @other_user.reload.admin? #reload is required after update
   end
+  
+  test "should redirect following when not logged in" do
+    get :following, id: @user
+    assert_redirected_to login_url
+  end
+  
+  test "should redirect followers when not logged in" do
+    get :followers, id: @user
+    assert_redirected_to login_url
+  end
 end
